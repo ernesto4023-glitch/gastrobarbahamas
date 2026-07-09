@@ -1,8 +1,16 @@
-const API_URL =
-  window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1"
-    ? "http://localhost:3000"
-    : "https://riverashop.net";
+
+const hostname = window.location.hostname;
+
+const esLocal =
+  hostname === "localhost" ||
+  hostname === "127.0.0.1" ||
+  hostname.startsWith("192.168.") ||
+  hostname.startsWith("10.") ||
+  hostname.startsWith("172.");
+
+const API_URL = esLocal
+  ? `http://${hostname}:3000`
+  : window.location.origin;
 
 let imagenesPreviewProducto = [];
 let imagenArrastrandoIndex = null;
