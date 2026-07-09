@@ -10,7 +10,7 @@ const esLocal =
 
 const API_URL = esLocal
   ? `http://${hostname}:3000`
-  : "https://jydgym.com";
+  : window.location.origin;
 
 let imagenesPreviewProducto = [];
 let imagenArrastrandoIndex = null;
@@ -2810,7 +2810,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 
 async function vender(id) {
 
-  const res = await fetch("http://localhost:3000/productos/vender", {
+  const res = await fetch(`${API_URL}productos/vender`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id, cantidad: 1 })
@@ -2894,7 +2894,7 @@ function openReservation(){
    CARGAR MESAS CLIENTE
 ========================= */
 async function loadTables(){
-  const res = await fetch("http://localhost:3000/mesas");
+  const res = await fetch(`${API_URL}/mesas`);
   const data = await res.json();
 
   const grid = document.getElementById("tableGrid");
@@ -2998,7 +2998,7 @@ async function loadAdmin(){
 ========================= */
 async function toggleTable(id, estado){
 
-  await fetch("http://localhost:3000/mesas/" + id,{
+  await fetch(`${API_URL}/mesas/${id}`,{
     method:"PUT",
     headers:{ "Content-Type":"application/json" },
     body:JSON.stringify({
@@ -3023,7 +3023,7 @@ async function toggleTable(id, checked){
 
   const estado = checked ? "ocupado" : "disponible";
 
-  await fetch("http://localhost:3000/mesas/" + id, {
+  await fetch(`${API_URL}/mesas/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ estado })
