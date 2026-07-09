@@ -2946,7 +2946,7 @@ async function createReservation(){
     return;
   }
 
-  await fetch("http://localhost:3000/reservas",{
+  await fetch(`${API_URL}/reservas`,{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body:JSON.stringify({
