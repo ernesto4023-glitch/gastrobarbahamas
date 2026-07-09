@@ -10,7 +10,7 @@ const esLocal =
 
 const API_URL = esLocal
   ? `http://${hostname}:3000`
-  : window.location.origin;
+  : "https://jydgym.com";
 
 let imagenesPreviewProducto = [];
 let imagenArrastrandoIndex = null;
