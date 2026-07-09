@@ -2966,7 +2966,7 @@ async function createReservation(){
    ADMIN - CARGAR TABLA
 ========================= */
 async function loadAdmin(){
-  const res = await fetch("http://localhost:3000/mesas");
+  const res = await fetch(`${API_URL}/mesas`);
   const data = await res.json();
 
   const t = document.getElementById("tabla");
