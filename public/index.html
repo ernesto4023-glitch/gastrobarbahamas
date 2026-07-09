@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GastroBar Bahamas</title>
+    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css?v=8">
+    <link rel="stylesheet" href="dashboard.css?v=8">
+    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="catalogo-header">
+            <div class="container catalogo-nav">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="Rivera Shop">
+                </a>
+
+                <button type="button" id="btnMenuMobile" class="menu-label">
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <nav class="nav-link" id="navbarMobile">
+                    <a href="index.html" class="activo">Inicio</a>
+                    <a href="catalogo.html">Menú</a>
+                    <a href="airbnb.html">Airbnb</a>
+                    <a href="novedades.html">Novedades</a>
+                    <a href="#footer">Contacto</a>
+
+                </nav>
+
+
+
+                <div class="catalogo-search">
+                    <input type="text" id="buscarCatalogo" placeholder="Buscar productos...">
+                    <span>🔍</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-content">
+
+            <div class="swiper header-swiper">
+
+                <div class="swiper-wrapper" id="flyersSwiper">
+                    <!-- Flyers JS -->
+                </div>
+
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
+
+            </div>
+
+            <!-- OVERLAY -->
+            <div class="hero-overlay">
+
+                <h1>VIVE EL
+                        <br>Mundial</h1>
+
+                <p>
+                    Comida, cocteles, fútbol en vivo y el mejor ambiente de la ciudad.
+                </p>
+
+                <div class="hero-buttons">
+                    <button class="btn-primary"><img src="/images/Balon.png" alt="balon" class="balon"> Ver
+                        menú</button>
+                    <button class="btn-outline" onclick="openReservation()">Reservar mesa</button>
+                </div>
+
+            </div>
+
+        </div>
+    </header>
+
+    <section class="categories container">
+
+        <h2 class="titulo">
+            <hr class="hr1"><span>
+                ⭐ Nuestro Menú ⭐
+
+            </span>
+            <hr class="hr2">
+        </h2>
+
+        <section class="categories container">
+            <div id="categoriasIndex" class="categorias-index"></div>
+        </section>
+
+
+    </section>
+
+    <main class="productos container" id="lista-1">
+
+        <section class="productos-home container">
+
+            <div class="productos-header">
+                <h2>Productos recomendados</h2>
+                <p>Descubre lo más pedido en nuestro gastrobar</p>
+            </div>
+
+            <!-- SWIPER CONTAINER -->
+            <div class="swiper productosSwiper">
+                <div class="swiper-wrapper" id="productosIndex">
+                    <!-- swiper-slide aquí -->
+                </div>
+            </div>
+
+            <a href="catalogo.html" class="ver-catalogo">
+                Ver catálogo
+            </a>
+
+        </section>
+
+
+        <section class="servicios">
+
+            <div class="servicios-header">
+                <h2>NUESTROS SERVICIOS</h2>
+                <p>Todo lo que necesitas para vivir la experiencia del gastrobar</p>
+            </div>
+
+            <div class="swiper serviciosSwiper">
+                <div class="swiper-wrapper">
+
+                    <div class="swiper-slide servicio-card" style="background-image:url('images/servicio1.png')">
+                        <div class="overlay">
+                            <h3>BEBIDAS PREMIUM</h3>
+                            <p>Cócteles y cervezas frías</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide servicio-card" style="background-image:url('images/servicio5.png')">
+                        <div class="overlay">
+                            <h3>Bolirana</h3>
+                            <p>Diviertete y Goza</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide servicio-card" style="background-image:url('images/servicio2.png')">
+                        <div class="overlay">
+                            <h3>GASTRONOMÍA</h3>
+                            <p>Hamburguesas y picadas</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide servicio-card" style="background-image:url('images/servicio4.png')">
+                        <div class="overlay">
+                            <h3>AMBIENTE AGRADABLE</h3>
+                            <p>Experiencia exclusiva</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+
+        <button class="action-btn" onclick="openReservation()">Reservar mesa</button>
+
+        <!-- MODAL -->
+        <div id="reservationModal" class="modal-overlay">
+
+            <div class="modal-box">
+                <span class="close-modal" onclick="closeReservation()">✕</span>
+                <div class="modal-header">
+                    <h2 class="modal-title">Reservar</h2>
+                </div>
+
+                <div class="form-section">
+                    <input id="inputName" class="form-input" placeholder="Nombre">
+                    <input id="inputId" class="form-input" placeholder="Cédula">
+                </div>
+
+                <h3 class="section-title">Mapa de mesas</h3>
+
+                <div id="tableGrid" class="table-grid"></div>
+
+                <button class="confirm-btn" onclick="createReservation()">
+                    Confirmar reserva
+                </button>
+
+            </div>
+        </div>
+
+        <section class="ubicacion-section container" id="ubicacion">
+            <div class="ubicacion-header">
+                <span>Visítanos</span>
+                <h2>Horario y ubicación</h2>
+                <p>
+                    Encuéntranos fácilmente y comunícate con nosotros para resolver tus dudas.
+                </p>
+            </div>
+
+            <div class="ubicacion-layout">
+
+                <div class="ubicacion-info">
+
+                    <div class="ubicacion-card">
+                        <div class="ubicacion-icon">
+                            <i class="bi bi-clock"></i>
+                        </div>
+
+                        <div>
+                            <h3>Horario</h3>
+                            <p>Lunes a jueves</p>
+                            <strong>3:00 p.m. - 1:00 a.m.</strong>
+                            <p>Jueves a Domingo</p>
+                            <strong>3:00 p.m. - 3:00 a.m.</strong>
+                        </div>
+                    </div>
+
+                    <div class="ubicacion-card">
+                        <div class="ubicacion-icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+
+                        <div>
+                            <h3>Ubicación</h3>
+                            <p>Estamos ubicados en:</p>
+                            <strong>Tolima, Ibague</strong>
+                        </div>
+                    </div>
+
+                    <div class="ubicacion-card">
+                        <div class="ubicacion-icon">
+                            <i class="bi bi-whatsapp"></i>
+                        </div>
+
+                        <div>
+                            <h3>WhatsApp</h3>
+                            <p>Escríbenos para más información</p>
+
+                            <a href="https://wa.me/573167858252" target="_blank" class="ubicacion-whatsapp">
+                                +57
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="ubicacion-mapa">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63645.07375795187!2d-75.24968053003612!3d4.445110055387839!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e38c5ee3598673f%3A0xbd175fb191f48ecd!2sJ%26D%20GYM!5e0!3m2!1sen!2sco!4v1780256432347!5m2!1sen!2sco"
+                        width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+
+            </div>
+        </section>
+
+
+        <button type="button" id="btnCarritoFlotante" class="carrito-flotante">
+            <i class="bi bi-cart"></i> <span id="contadorCarrito">0</span>
+        </button>
+
+
+        <div class="modal-checkout" id="modalCheckout">
+            <div class="modal-checkout-content">
+                <span class="cerrar-checkout" id="cerrarCheckout">&times;</span>
+
+                <h2>Finalizar compra</h2>
+
+                <form id="formCheckout">
+                    <input type="text" id="checkoutNombre" placeholder="Nombre completo" required>
+                    <input type="tel" id="checkoutWhatsapp" placeholder="WhatsApp" required>
+                    <input type="email" id="checkoutCorreo" placeholder="Correo electrónico">
+
+                    <input type="text" id="checkoutDireccion" placeholder="Dirección" required>
+                    <input type="text" id="checkoutCiudad" placeholder="Ciudad" required>
+
+                    <input type="hidden" id="checkoutMetodoPago" required>
+
+                    <div class="metodos-pago">
+                        <button type="button" class="metodo-pago-btn" data-metodo-pago="Nequi">
+                            Nequi
+                        </button>
+
+                        <button type="button" class="metodo-pago-btn" data-metodo-pago="Bancolombia">
+                            Bancolombia
+                        </button>
+
+                    </div>
+
+                    <div class="info-metodo-pago" id="infoMetodoPago">
+                        Selecciona un método de pago para ver la información.
+                    </div>
+
+                    <input type="file" id="checkoutComprobante" accept="image/*,.pdf">
+
+                    <textarea id="checkoutNotas" placeholder="Notas adicionales"></textarea>
+
+                    <button type="submit">Enviar pedido</button>
+                </form>
+            </div>
+        </div>
+        <footer class="footer" id="footer">
+
+            <div class="footer-contenido">
+
+                <!-- MARCA -->
+                <div class="footer-seccion f1">
+                    <h3 class="logoFooter">
+                        <img src="images/logo.png" alt="Logo">
+                    </h3>
+                    <p style="text-align: center;">
+                        Importamos desde USA <br> directo a tus manos
+                    </p>
+                </div>
+
+                <!-- CONTACTO -->
+                <div class="footer-seccion f2">
+                    <h4>Contacto</h4>
+                    <p><i class="bi bi-whatsapp"></i> WhatsApp: +57 </p>
+                    <p><i class="bi bi-geo-alt"></i></p>
+                </div>
+
+                <!-- SERVICIOS -->
+                <div class="footer-seccion f3">
+                    <h4>Servicios</h4>
+                    <p>Boli Rana</p>
+                    <p>Buena Comida</p>
+                    <p>Ambiente Agradable</p>
+                    <p>Buena Música</p>
+                </div>
+
+                <!-- REDES -->
+                <div class="footer-seccion f4">
+                    <h4>Síguenos</h4>
+                    <div class="link">
+                        <p><a href="#"><i class="bi bi-facebook"></i></a></p>
+                        <p><a href="#" target="_blank"><i class="bi bi-whatsapp"></i></a></p>
+                        <p><a href="#"><i class="bi bi-instagram"></i></a></p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- COPYRIGHT -->
+            <div class="footer-copy">
+                <p>© 2026 GastroBar Bahamas - Todos los derechos reservados</p>
+            </div>
+
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script src="scripts.js?v=20"></script>
+</body>
+
+</html>

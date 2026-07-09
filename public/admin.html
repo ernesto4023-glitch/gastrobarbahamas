@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrador | Gastrobar Bahamas</title>
+
+  <link rel="stylesheet" href="styles.css?10">
+  <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="dashboard.css?10">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+  <button class="admin-mobile-toggle" id="adminMobileToggle">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <aside class="admin-sidebar">
+    <div>
+      <div class="admin-logo">
+        <a href="index.html"><img src="images/logo.png" alt="GastroBar"></a>
+      </div>
+
+      <nav class="admin-menu">
+        <a href="#" class="admin-link active" data-section="dashboard">
+          <i class="bi bi-house"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#" class="admin-link" data-section="flyers">
+          <i class="bi bi-image"></i>
+          <span>Flyers</span>
+        </a>
+
+        <a href="#" class="admin-link" data-section="categorias">
+          <i class="bi bi-grid"></i>
+          <span>Categorías</span>
+        </a>
+
+        <a href="#" class="admin-link" data-section="productos">
+          <i class="bi bi-bag"></i>
+          <span>Productos</span>
+        </a>
+
+        <a href="#" class="admin-link" data-section="mesas">
+          <i class="bi bi-bag"></i>
+          <span>Mesas</span>
+        </a>
+
+        <a href="#" class="admin-link" data-section="pedidos">
+          <i class="bi bi-receipt"></i>
+          <span>Pedidos</span>
+          <small id="contadorPedidosPendientes">0</small>
+        </a>
+
+        <a href="#" class="admin-link" data-section="clientes">
+          <i class="bi bi-person"></i>
+          <span>Clientes</span>
+        </a>
+
+        <a href="#" class="admin-link" data-section="resenas">
+          <i class="bi bi-star"></i>
+          <span>Reseñas</span>
+        </a>
+
+        <a href="#" class="admin-link" data-section="configuracion">
+          <i class="bi bi-gear"></i>
+          <span>Configuración</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="admin-profile">
+      <img src="images/logo.png" alt="Admin">
+      <div>
+        <h4>GastroBar Bahamas Admin</h4>
+        <p>admin@gastrobar.com</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <header class="admin-topbar">
+      <div class="admin-title-box">
+        <div>
+          <h1 id="adminPageTitle">Dashboard</h1>
+          <p><span>Inicio</span> / <span id="adminBreadcrumb">Dashboard</span></p>
+        </div>
+      </div>
+
+      <div class="admin-top-actions">
+        <div class="admin-search">
+          <input type="text" placeholder="Buscar...">
+          <i class="bi bi-search"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="admin-section active" id="dashboard">
+
+      <section class="dashboard-metrics">
+        <div class="metric-card">
+          <div class="metric-icon"><i class="bi bi-currency-dollar"></i></div>
+          <div>
+            <p>Ventas totales</p>
+            <h2 id="metricVentasTotales">$0</h2>
+            <span id="metricVentasInfo">Calculando...</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon"><i class="bi bi-bag"></i></div>
+          <div>
+            <p>Pedidos</p>
+            <h2 id="metricPedidos">0</h2>
+            <span>Pedidos registrados</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon"><i class="bi bi-eye"></i></div>
+          <div>
+            <p>Visitas</p>
+            <h2 id="metricVisitas">0</h2>
+            <span>Visitas registradas</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon"><i class="bi bi-box-seam"></i></div>
+          <div>
+            <p>Productos</p>
+            <h2 id="metricProductos">0</h2>
+            <span>Productos publicados</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-charts">
+
+        <div class="dashboard-chart-card">
+          <div class="dashboard-chart-header">
+            <div>
+              <h3>Visitas</h3>
+              <p>Visitas registradas según el periodo seleccionado</p>
+            </div>
+
+            <div class="dashboard-chart-filtros">
+              <button type="button" class="active" data-periodo-dashboard="dia">Día</button>
+              <button type="button" data-periodo-dashboard="mes">Mes</button>
+              <button type="button" data-periodo-dashboard="anio">Año</button>
+            </div>
+          </div>
+
+          <canvas id="graficoBarrasDashboard"></canvas>
+        </div>
+
+        <div class="dashboard-chart-card">
+          <div class="dashboard-chart-header">
+            <div>
+              <h3>Pedidos por categoría</h3>
+              <p>Distribución de productos vendidos según su categoría</p>
+            </div>
+          </div>
+
+          <canvas id="graficoPastelDashboard"></canvas>
+        </div>
+
+      </section>
+
+    </section>
+
+    <section class="admin-section" id="flyers">
+
+      <button id="abrirModalFlyer" class="btn-crear-categoria">
+        Agregar Flyer
+      </button>
+
+      <div class="modal-categoria" id="modalFlyer">
+        <div class="modal-contenido">
+          <span class="cerrar-modal" id="cerrarModalFlyer">&times;</span>
+
+          <h2>Agregar Flyer</h2>
+
+          <form id="formFlyer">
+            <input type="file" id="imagenFlyer" accept="image/*" required>
+            <button type="submit">Guardar Flyer</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="contenedorFlyers" class="categorias-admin"></div>
+    </section>
+
+    <section class="admin-section" id="categorias">
+
+      <button id="abrirModalCategoria" class="btn-crear-categoria">
+        Crear Categoría
+      </button>
+
+      <div class="modal-categoria" id="modalCategoria">
+        <div class="modal-contenido">
+          <span class="cerrar-modal" id="cerrarModalCategoria">&times;</span>
+
+          <h2>Crear Categoría</h2>
+
+          <form id="formCategoria">
+            <input type="text" id="nombreCategoria" placeholder="Nombre de la categoría" required>
+            <input type="file" id="imagenCategoria" accept="image/*" required>
+            <button type="submit">Guardar Categoría</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="contenedorCategorias" class="categorias-admin"></div>
+    </section>
+
+    <section class="admin-section admin-productos-section" id="productos">
+
+      <button id="abrirModalProducto" class="btn-crear-categoria">
+        + Agregar Producto
+      </button>
+
+      <div class="modal-producto" id="modalProducto">
+        <div class="modal-producto-contenido">
+
+          <span class="cerrar-modal-producto" id="cerrarModalProducto">&times;</span>
+
+          <div class="producto-header">
+            <p>Inicio › Mis Productos › <span>Agregar Nuevo Producto</span></p>
+            <h2>Agregar Nuevo Producto</h2>
+            <p>Completa la información para publicar tu producto en la tienda.</p>
+          </div>
+
+          <form id="formProducto" class="producto-form">
+
+            <div class="producto-grid">
+
+              <div class="producto-card">
+
+                <h3>Información del producto</h3>
+
+                <div class="form-group">
+                  <label>Título del producto *</label>
+                  <input type="text" id="nombreProducto" required>
+                </div>
+
+                <div class="form-row">
+
+                  <div class="form-group">
+                    <label>Precio *</label>
+                    <input type="number" id="precioProducto" min="0" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Precio combo</label>
+                    <input type="number" id="precioComboProducto" min="0">
+                  </div>
+
+                </div>
+
+                <div class="form-group">
+                  <label>Descripción *</label>
+                  <textarea id="descripcionProducto" required></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label>Categoría *</label>
+                  <select id="categoriaProducto" required>
+                    <option value="">Selecciona una categoría</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Stock</label>
+                  <input type="number" id="stockProducto" min="0">
+                </div>
+
+              </div>
+
+              <!-- IMÁGENES (NO TOCAR) -->
+              <div class="producto-card">
+
+                <h3>Imágenes del producto</h3>
+
+                <label for="imagenesProducto" class="upload-area">
+                  <div>☁</div>
+                  <h4>Subir imágenes</h4>
+                  <p>o arrastra aquí</p>
+                </label>
+
+                <input type="file" id="imagenesProducto" multiple hidden>
+
+                <div class="galeria-header">
+                  <span id="contadorImagenes">0/6</span>
+                </div>
+
+                <div class="preview-galeria" id="previewGaleria"></div>
+
+              </div>
+
+            </div>
+
+            <div class="producto-actions">
+              <button type="button" id="cancelarProducto">Cancelar</button>
+              <button type="submit">Guardar producto</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+      <div id="contenedorProductos" class="productos-admin"></div>
+    </section>
+
+    <section class="admin-section" id="mesas">
+
+      <h2 class="page-title">Servicio de Mesas</h2>
+
+<div class="table-container">
+
+  <table class="restaurant-table">
+
+    <thead>
+      <tr>
+        <th>Mesa</th>
+        <th>Nombre</th>
+        <th>Cédula</th>
+        <th>Estado</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+
+    <tbody id="tabla" class="table-body"></tbody>
+
+  </table>
+
+</div>
+
+      <section class="admin-section" id="pedidos">
+        <h2 class="admin-h2">Pedidos</h2>
+
+        <div class="admin-panel-card">
+          <div id="contenedorPedidos" class="productos-admin"></div>
+        </div>
+      </section>
+
+      <section class="admin-section" id="clientes">
+        <h2 class="admin-h2">Clientes</h2>
+        <p>Próximamente conectamos clientes.</p>
+      </section>
+
+      <section class="admin-section" id="resenas">
+        <h2 class="admin-h2">Reseñas</h2>
+        <p>Próximamente conectamos reseñas.</p>
+      </section>
+
+      <section class="admin-section" id="configuracion">
+      </section>
+
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const adminLinks = document.querySelectorAll(".admin-link");
+      const adminSections = document.querySelectorAll(".admin-section");
+      const adminSidebar = document.querySelector(".admin-sidebar");
+      const adminMobileToggle = document.getElementById("adminMobileToggle");
+      const adminPageTitle = document.getElementById("adminPageTitle");
+      const adminBreadcrumb = document.getElementById("adminBreadcrumb");
+
+      if (adminMobileToggle && adminSidebar) {
+        adminMobileToggle.addEventListener("click", () => {
+          adminSidebar.classList.toggle("active");
+        });
+      }
+
+      adminLinks.forEach(link => {
+        link.addEventListener("click", e => {
+          e.preventDefault();
+
+          const sectionId = link.dataset.section;
+          const sectionTitle = link.querySelector("span")?.textContent || sectionId;
+
+          adminLinks.forEach(item => item.classList.remove("active"));
+          adminSections.forEach(section => section.classList.remove("active"));
+
+          link.classList.add("active");
+          document.getElementById(sectionId)?.classList.add("active");
+
+          if (adminPageTitle) adminPageTitle.textContent = sectionTitle;
+          if (adminBreadcrumb) adminBreadcrumb.textContent = sectionTitle;
+
+          if (window.innerWidth <= 900 && adminSidebar) {
+            adminSidebar.classList.remove("active");
+          }
+        });
+      });
+    });
+  </script>
+
+  <script src="scripts.js?v=22"></script>
+</body>
+
+</html>

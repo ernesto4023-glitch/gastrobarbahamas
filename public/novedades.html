@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novedades | Rivera Shop</title>
+  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="dashboard.css?v=8">
+  <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+<header class="catalogo-header">
+  <div class="container catalogo-nav">
+    <a href="index.html" class="logo">
+      <img src="images/logo.png" alt="GastroBar">
+    </a>
+
+      <button type="button" id="btnMenuMobile" class="menu-label">
+        <i class="bi bi-list"></i>
+      </button>
+
+        <nav class="nav-link" id="navbarMobile">
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Menú</a>
+            <a href="novedades.html" class="activo">Novedades</a>
+            <a href="#footer">Contacto</a>
+        </nav>
+
+    <div class="catalogo-search">
+      <input type="text" id="buscarNovedades" placeholder="Buscar novedades...">
+      <span>🔍</span>
+    </div>
+  </div>
+</header>
+
+<main class="catalogo-page container">
+
+  <div class="breadcrumb">
+    Inicio › Novedades
+  </div>
+
+  <section class="catalogo-top">
+    <div>
+      <h1>Novedades</h1>
+      <p>Productos agregados recientemente a Rivera Shop.</p>
+    </div>
+
+    <div class="catalogo-controls">
+      <select id="ordenNovedades">
+        <option value="recientes">Más recientes</option>
+        <option value="mayor">Mayor precio</option>
+        <option value="menor">Menor precio</option>
+        <option value="nombre">Nombre A-Z</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="catalogo-main">
+    <div class="catalogo-info">
+      <span id="contadorNovedades">Mostrando novedades</span>
+    </div>
+
+    <div id="productosNovedades" class="catalogo-grid"></div>
+  </section>
+
+</main>
+
+<div class="modal-checkout" id="modalCheckout">
+    <div class="modal-checkout-content">
+        <span class="cerrar-checkout" id="cerrarCheckout">&times;</span>
+
+        <h2>Finalizar compra</h2>
+
+        <form id="formCheckout">
+        <input type="text" id="checkoutNombre" placeholder="Nombre completo" required>
+        <input type="tel" id="checkoutWhatsapp" placeholder="WhatsApp" required>
+        <input type="email" id="checkoutCorreo" placeholder="Correo electrónico">
+
+        <input type="text" id="checkoutDireccion" placeholder="Dirección" required>
+        <input type="text" id="checkoutCiudad" placeholder="Ciudad" required>
+
+        <input type="hidden" id="checkoutMetodoPago" required>
+
+        <div class="metodos-pago">
+            <button type="button" class="metodo-pago-btn" data-metodo-pago="Nequi">
+                Nequi
+            </button>
+
+            <button type="button" class="metodo-pago-btn" data-metodo-pago="Bancolombia">
+                Bancolombia
+            </button>
+
+            </div>
+
+            <div class="info-metodo-pago" id="infoMetodoPago">
+            Selecciona un método de pago para ver la información.
+        </div>
+
+        <input type="file" id="checkoutComprobante" accept="image/*,.pdf">
+
+        <textarea id="checkoutNotas" placeholder="Notas adicionales"></textarea>
+
+        <button type="submit">Enviar pedido</button>
+        </form>
+    </div>
+</div>
+<footer class="footer" id="footer">
+
+<div class="footer-contenido">
+
+    <!-- MARCA -->
+    <div class="footer-seccion f1">
+    <h3 class="logoFooter">
+        <img src="images/LogoFooter.png" alt="Logo">
+    </h3>
+    <p style="text-align: center;">
+        Importamos desde USA <br> directo a tus manos 
+    </p>
+    </div>
+
+    <!-- CONTACTO -->
+    <div class="footer-seccion f2">
+    <h4>Contacto</h4>
+    <p><i class="bi bi-whatsapp"></i> WhatsApp: +57 322 3349682</p>
+    <p><i class="bi bi-geo-alt"></i> Envios a toda Colombia</p>
+    </div>
+
+    <!-- SERVICIOS -->
+    <div class="footer-seccion f3">
+        <h4>Servicios</h4>
+
+        <p>Personal Shopper</p>
+        <p>Compras por encargo</p>
+        <p>Preventa USA</p>
+        <p>Envíos a Colombia</p>
+        <p>Asesoría para emprendedores</p>
+    </div>
+
+    <!-- REDES -->
+    <div class="footer-seccion f4">
+    <h4>Síguenos</h4>
+    <div class="link">
+    <p><a href="https://www.facebook.com/share/1EAkU14Fbb/?mibextid=wwXIfr"><i class="bi bi-facebook"></i></a></p>
+    <p><a href="https://wa.me/+573223349682?text=Hola%20quiero%20información%20sobre%20sus%20productos" target="_blank"><i class="bi bi-whatsapp"></i></a></p>
+    <p><a href="https://www.instagram.com/riverashop.col?igsh=MzBkN2J1bGdjYXl5&utm_source=qr"><i class="bi bi-instagram"></i></a></p>
+    </div>
+    </div>
+
+</div>
+
+<!-- COPYRIGHT -->
+<div class="footer-copy">
+    <p>© 2026 Rivera Shop - Todos los derechos reservados</p>
+</div>
+
+</footer>
+<script src="scripts.js?v=20"></script>
+
+</body>
+</html>

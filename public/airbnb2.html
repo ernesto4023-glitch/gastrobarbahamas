@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Airbnb Detail Clone</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+}
+
+body{
+  background:#fff;
+  color:#222;
+}
+
+/* NAV */
+.nav{
+  position:sticky;
+  top:0;
+  background:#fff;
+  border-bottom:1px solid #eee;
+  padding:15px 60px;
+  z-index:1000;
+}
+
+.nav-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo{
+  color:#FF5A5F;
+  font-weight:800;
+  font-size:20px;
+}
+
+.icons i{
+  margin-left:15px;
+  cursor:pointer;
+}
+
+/* HEADER */
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+}
+
+.breadcrumb{
+  font-size:13px;
+  color:#777;
+  margin-bottom:10px;
+}
+
+.title-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.title{
+  font-size:26px;
+  font-weight:600;
+}
+
+.subinfo{
+  margin-top:5px;
+  font-size:14px;
+  color:#555;
+}
+
+/* GALLERY */
+.gallery{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:10px;
+  margin-top:20px;
+  border-radius:16px;
+  overflow:hidden;
+}
+
+.gallery img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.gallery img:hover{
+  transform:scale(1.03);
+}
+
+.side-gallery{
+  display:grid;
+  grid-template-rows:1fr 1fr;
+  gap:10px;
+}
+
+.view-all{
+  position:absolute;
+  right:20px;
+  bottom:20px;
+  background:#fff;
+  padding:8px 12px;
+  border-radius:10px;
+  font-size:13px;
+  cursor:pointer;
+  box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+/* MAIN GRID */
+.main{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:40px;
+  margin-top:30px;
+}
+
+/* LEFT */
+.section{
+  margin-bottom:25px;
+}
+
+.host{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+}
+
+.host img{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+}
+
+/* FEATURES */
+.features{
+  margin-top:10px;
+}
+
+.feature{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:10px 0;
+  color:#444;
+}
+
+/* DESCRIPTION */
+.desc{
+  color:#555;
+  line-height:1.5;
+}
+
+.btn-text{
+  color:#000;
+  font-weight:500;
+  cursor:pointer;
+}
+
+/* RIGHT CARD */
+.card{
+  position:sticky;
+  top:90px;
+  border:1px solid #eee;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 10px 20px rgba(0,0,0,.08);
+}
+
+.price{
+  font-size:22px;
+  font-weight:700;
+}
+
+.input{
+  border:1px solid #ddd;
+  padding:10px;
+  border-radius:10px;
+  margin-top:10px;
+  font-size:13px;
+}
+
+.btn{
+  width:100%;
+  background:#FF5A5F;
+  color:#fff;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  margin-top:15px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.small{
+  font-size:12px;
+  color:#777;
+  margin-top:10px;
+}
+
+/* PRICE BREAKDOWN */
+.breakdown{
+  margin-top:15px;
+  font-size:14px;
+}
+
+.breakdown div{
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+}
+
+/* REVIEWS */
+.bar{
+  height:6px;
+  background:#eee;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.bar div{
+  height:100%;
+  background:#FF5A5F;
+}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  justify-content:center;
+  align-items:center;
+}
+
+.modal img{
+  max-width:90%;
+  max-height:80%;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .main{
+    grid-template-columns:1fr;
+  }
+  .gallery{
+    grid-template-columns:1fr;
+  }
+  .side-gallery{
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+  <div class="nav-top">
+    <div class="logo">airbnb</div>
+    <div class="icons">
+      <i class="fa fa-share"></i>
+      <i class="fa fa-heart"></i>
+      <i class="fa fa-bars"></i>
+      <i class="fa fa-user-circle"></i>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="breadcrumb">Barcelona, España > Example</div>
+
+  <div class="title-row">
+    <div>
+      <div class="title">Apartamento moderno en Barcelona</div>
+      <div class="subinfo">★ 4.89 · 128 evaluaciones · Superanfitrión</div>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="gallery">
+    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85" onclick="openModal(this.src)"/>
+    <div class="side-gallery">
+      <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688" onclick="openModal(this.src)"/>
+      <img src="https://images.unsplash.com/photo-1501183638710-841dd1904471" onclick="openModal(this.src)"/>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- LEFT -->
+    <div>
+
+      <div class="section">
+        <h3>Alojamiento entero: apartamento en Barcelona</h3>
+        <p class="subinfo">2 huéspedes · 1 habitación · 1 cama · 1 baño</p>
+      </div>
+
+      <div class="section">
+        <h4>Anfitrión</h4>
+        <div class="host">
+          <img src="https://i.pravatar.cc/100"/>
+          <div>
+            <b>Anfitrión Laura</b><br/>
+            <span class="subinfo">Superanfitrión</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section features">
+        <div class="feature"><i class="fa fa-key"></i> Llegada autónoma</div>
+        <div class="feature"><i class="fa fa-wifi"></i> WiFi rápido</div>
+        <div class="feature"><i class="fa fa-utensils"></i> Cocina equipada</div>
+        <div class="feature"><i class="fa fa-snowflake"></i> Aire acondicionado</div>
+      </div>
+
+      <div class="section">
+        <p class="desc" id="desc">
+          Este apartamento moderno ofrece una experiencia única en el corazón de Barcelona...
+          <span id="more" style="display:none;">
+          Con vistas increíbles, diseño elegante y acceso a los mejores restaurantes.
+          </span>
+          <span class="btn-text" onclick="toggleDesc()"> Mostrar más</span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="card">
+      <div class="price">$82 <span style="font-size:14px">/ noche</span></div>
+
+      <div class="input">Check-in</div>
+      <div class="input">Check-out</div>
+
+      <div class="input" onclick="toggleGuests()">Huéspedes ▼</div>
+
+      <button class="btn">Reservar</button>
+
+      <div class="small">No se te cobrará aún</div>
+
+      <div class="breakdown">
+        <div><span>$82 x 2 noches</span><span>$164</span></div>
+        <div><span>Tarifa limpieza</span><span>$30</span></div>
+        <div><span>Servicio</span><span>$35</span></div>
+        <hr/>
+        <div><b>Total</b><b>$229</b></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal" onclick="closeModal()">
+  <img id="modalImg"/>
+</div>
+
+<script>
+function toggleDesc(){
+  const more = document.getElementById("more");
+  more.style.display = more.style.display === "none" ? "inline" : "none";
+}
+
+function openModal(src){
+  document.getElementById("modal").style.display = "flex";
+  document.getElementById("modalImg").src = src;
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display = "none";
+}
+
+function toggleGuests(){
+  alert("Dropdown de huéspedes (UI)");
+}
+</script>
+
+</body>
+</html>

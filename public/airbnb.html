@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Airbnb Clone</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+}
+
+body{
+  background:#fff;
+  color:#222;
+}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;
+  top:0;
+  width:100%;
+  background:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 60px;
+  z-index:1000;
+  transition:.3s;
+}
+
+.navbar.shadow{
+  box-shadow:0 2px 15px rgba(0,0,0,.08);
+}
+
+.nav-left{
+  font-weight:700;
+  color:#FF5A5F;
+  font-size:22px;
+}
+
+.nav-center{
+  display:flex;
+  gap:25px;
+  font-size:14px;
+}
+
+.nav-right{
+  display:flex;
+  gap:15px;
+  align-items:center;
+}
+
+.avatar{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#ddd;
+}
+
+/* HERO */
+.hero{
+  height:90vh;
+  margin-top:70px;
+  background:url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85') center/cover;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.35);
+}
+
+.hero-content{
+  position:relative;
+  text-align:center;
+  color:white;
+}
+
+.hero-content h1{
+  font-size:48px;
+  margin-bottom:10px;
+}
+
+.hero-content p{
+  font-size:18px;
+  opacity:.9;
+}
+
+/* SEARCH BAR */
+.search-bar{
+  margin-top:25px;
+  background:white;
+  border-radius:40px;
+  display:flex;
+  align-items:center;
+  padding:10px;
+  width:800px;
+  max-width:90%;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+.search-item{
+  flex:1;
+  padding:10px 15px;
+  font-size:13px;
+  color:#666;
+  border-right:1px solid #eee;
+}
+
+.search-item:last-child{
+  border:none;
+}
+
+.search-btn{
+  background:#FF5A5F;
+  border:none;
+  color:white;
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  cursor:pointer;
+}
+
+/* SECTIONS */
+.section{
+  padding:60px;
+}
+
+.section h2{
+  margin-bottom:20px;
+}
+
+/* CARDS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+
+.card{
+  border-radius:16px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+  transition:.3s;
+  cursor:pointer;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+}
+
+.card img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+}
+
+.card-body{
+  padding:12px;
+  position:relative;
+}
+
+.heart{
+  position:absolute;
+  top:-160px;
+  right:10px;
+  background:white;
+  padding:8px;
+  border-radius:50%;
+  cursor:pointer;
+}
+
+.heart.active{
+  color:#FF5A5F;
+}
+
+/* CATEGORIES */
+.categories{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:15px;
+}
+
+.cat{
+  text-align:center;
+  padding:15px;
+  border-radius:12px;
+  transition:.3s;
+}
+
+.cat:hover{
+  transform:scale(1.05);
+  background:#f7f7f7;
+}
+
+/* BANNER */
+.banner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#f7f7f7;
+  border-radius:20px;
+  padding:40px;
+}
+
+.banner img{
+  width:45%;
+  border-radius:15px;
+}
+
+.banner-text h3{
+  font-size:28px;
+  margin-bottom:10px;
+}
+
+.btn{
+  background:#FF5A5F;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+/* FOOTER */
+.footer{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  padding:40px;
+  background:#fafafa;
+  margin-top:40px;
+  text-align:center;
+}
+
+/* RESPONSIVE */
+@media(max-width:1000px){
+  .grid{grid-template-columns:repeat(2,1fr);}
+  .categories{grid-template-columns:repeat(3,1fr);}
+  .banner{flex-direction:column;}
+  .banner img{width:100%;}
+}
+
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr;}
+  .categories{grid-template-columns:repeat(2,1fr);}
+  .hero-content h1{font-size:32px;}
+  .navbar{padding:15px 20px;}
+  .nav-center{display:none;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar" id="navbar">
+  <div class="nav-left">airbnb</div>
+
+  <div class="nav-center">
+    <div><a href="airbnb2.html">Alojamientos</a></div>
+    <div>Experiencias</div>
+    <div>Anfitriones</div>
+  </div>
+
+  <div class="nav-right">
+    <i class="fa-solid fa-globe"></i>
+    <i class="fa-solid fa-bars"></i>
+    <div class="avatar"></div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-content">
+    <h1>Encuentra tu lugar ideal</h1>
+    <p>Alojamientos increíbles en todo el mundo, como en casa.</p>
+
+    <div class="search-bar">
+      <div class="search-item">¿A dónde vas?</div>
+      <div class="search-item">Check-in</div>
+      <div class="search-item">Check-out</div>
+      <div class="search-item">Huéspedes</div>
+      <button class="search-btn"><i class="fa fa-search"></i></button>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Alojamientos populares</h2>
+
+  <div class="grid">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688"/>
+      <div class="card-body">
+        <div class="heart"><i class="fa fa-heart"></i></div>
+        <h4>Apartamento moderno</h4>
+        <p>Barcelona</p>
+        <p>$82 / noche</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511"/>
+      <div class="card-body">
+        <div class="heart"><i class="fa fa-heart"></i></div>
+        <h4>Loft vista mar</h4>
+        <p>Valencia</p>
+        <p>$105 / noche</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"/>
+      <div class="card-body">
+        <div class="heart"><i class="fa fa-heart"></i></div>
+        <h4>Estudio acogedor</h4>
+        <p>Madrid</p>
+        <p>$69 / noche</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858"/>
+      <div class="card-body">
+        <div class="heart"><i class="fa fa-heart"></i></div>
+        <h4>Ático central</h4>
+        <p>Sevilla</p>
+        <p>$92 / noche</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <h2>Explora por categoría</h2>
+
+  <div class="categories">
+    <div class="cat"><i class="fa fa-water"></i><p>Frente al mar</p></div>
+    <div class="cat"><i class="fa fa-person-swimming"></i><p>Piscinas</p></div>
+    <div class="cat"><i class="fa fa-house"></i><p>Casas</p></div>
+    <div class="cat"><i class="fa fa-campground"></i><p>Cabañas</p></div>
+    <div class="cat"><i class="fa fa-palette"></i><p>Diseño</p></div>
+    <div class="cat"><i class="fa fa-mountain"></i><p>Vistas</p></div>
+  </div>
+</div>
+
+<div class="section banner">
+  <div class="banner-text">
+    <h3>Aloja tu espacio en Airbnb</h3>
+    <p>Gana dinero compartiendo tu espacio</p>
+    <button class="btn">Empieza ahora</button>
+  </div>
+
+  <img src="https://images.unsplash.com/photo-1501183638710-841dd1904471"/>
+</div>
+
+<div class="footer">
+  <div>Cancelación flexible</div>
+  <div>Atención 24/7</div>
+  <div>Pagos seguros</div>
+</div>
+
+<script>
+// navbar shadow on scroll
+window.addEventListener("scroll",()=>{
+  document.getElementById("navbar")
+  .classList.toggle("shadow",window.scrollY>10);
+});
+
+// heart toggle
+document.querySelectorAll(".heart").forEach(h=>{
+  h.addEventListener("click",()=>{
+    h.classList.toggle("active");
+  });
+});
+
+// fake search click
+document.querySelector(".search-btn").addEventListener("click",()=>{
+  alert("Buscando alojamientos...");
+});
+</script>
+
+</body>
+</html>
