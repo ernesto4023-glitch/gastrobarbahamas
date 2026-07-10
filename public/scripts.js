@@ -1290,7 +1290,7 @@ async function cargarDetalleProducto() {
   </div>
 
   <div class="producto-imagen-principal">
-    <img id="imagenPrincipalProducto" src="${API_URL}/${imagenes[0]}" alt="${producto.nombre}">
+    <img id="imagenPrincipalProducto" src="${API_URL}/${imagenes[0]}" loading="lazy" decoding="async" alt="${producto.nombre}">
   </div>
 
 </div>
@@ -1388,7 +1388,7 @@ async function cargarProductosSimilares(categoriaId, productoActualId) {
     <a href="producto.html?id=${producto.id}" class="catalogo-card">
 
       <div class="catalogo-img">
-        <img src="${API_URL}/${producto.imagen}" alt="${producto.nombre}">
+        <img src="${API_URL}/${producto.imagen}" loading="lazy" decoding="async" alt="${producto.nombre}">
       </div>
 
       <div class="catalogo-card-info">
@@ -1521,7 +1521,7 @@ function pintarCatalogo(productos) {
     <a href="producto.html?id=${producto.id}" class="catalogo-card">
 
       <div class="catalogo-img">
-        <img src="${API_URL}/${producto.imagen}" alt="${producto.nombre}">
+        <img src="${API_URL}/${producto.imagen}" loading="lazy" decoding="async" alt="${producto.nombre}">
       </div>
 
       <div class="catalogo-card-info menu-h3">
