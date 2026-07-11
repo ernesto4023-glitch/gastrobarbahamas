@@ -2283,7 +2283,7 @@ ${productosTexto}
 ${notas || "Sin notas"}
 `;
 
-    const numeroNegocio = "573223349682";
+    const numeroNegocio = "573023742960";
 
     const urlWhatsapp = `https://wa.me/${numeroNegocio}?text=${encodeURIComponent(mensaje)}`;
 
