@@ -23,7 +23,7 @@ function formatearPrecio(precio) {
 
   return new Intl.NumberFormat("es-CO").format(precioNum);
 }
-
+let flyerEditandoId = null;
 let categoriaEditandoId = null;
 let productoEditandoId = null;
 let imagenActualProducto = "";
@@ -474,7 +474,7 @@ async function cargarCategoriasIndex() {
 
     contenedor.innerHTML = categoriasIndex.map(categoria => `
       <a href="catalogo.html?categoria=${categoria.id}" class="categoria-card categoria-link">
-        <img src="${API_URL}/${categoria.imagen}" alt="${categoria.nombre}">
+        <img src="${API_URL}/${categoria.imagen}" loading="lazy" decoding="async" alt="${categoria.nombre}">
         <h3>${categoria.nombre}</h3>
       </a>
     `).join("");
@@ -870,7 +870,7 @@ async function cargarProductosAdmin() {
 
               <td>
                 <div class="admin-product-info">
-                  <img src="${API_URL}/${producto.imagen}" alt="${producto.nombre}">
+                  <img src="${API_URL}/${producto.imagen}" loading="lazy" decoding="async" alt="${producto.nombre}">
                   <div>
                     <h4>${producto.nombre}</h4>
                     <span>SKU: ${producto.sku || "N/A"}</span>
@@ -979,7 +979,7 @@ function crearFilaProducto(producto) {
 
       <td>
         <div class="admin-product-info">
-          <img src="${API_URL}/${producto.imagen}" alt="${producto.nombre}">
+          <img src="${API_URL}/${producto.imagen}" loading="lazy" decoding="async" alt="${producto.nombre}">
           <div>
             <h4>${producto.nombre}</h4>
             <span>SKU: ${producto.sku || "N/A"}</span>
@@ -1125,10 +1125,6 @@ function mezclarProductos(array) {
 
 let swiperProductos = null;
 
-function mezclarProductos(array) {
-  return [...array].sort(() => Math.random() - 0.5);
-}
-
 async function cargarProductosIndex() {
   const contenedor = document.getElementById("productosIndex");
   if (!contenedor) return;
@@ -1148,47 +1144,95 @@ async function cargarProductosIndex() {
     }
 
     contenedor.innerHTML = productosSlider.map(producto => `
-      <div class="swiper-slide">
-        <a href="producto.html?id=${producto.id}" class="catalogo-card">
+       <div class="swiper-slide">
 
-          <div class="catalogo-img">
-            <img src="${API_URL}/${producto.imagen}" alt="${producto.nombre}">
+        <a href="producto.html?id=${producto.id}" class="producto-card">
+
+
+          <div class="producto-card-imagen">
+
+            <img 
+              src="${API_URL}/${producto.imagen}" 
+              loading="lazy" decoding="async"
+              alt="${producto.nombre}"
+            >
+
           </div>
 
-          <div class="catalogo-card-info">
-            <h3>${producto.nombre}</h3>
 
-            <div class="precios">
+          <div class="overlay-producto">
 
-              <div class="precio-normal">
-                <span>Precio</span>
-                <strong>${formatearPrecio(producto.precio)}</strong>
+            <h4>
+              ${producto.nombre}
+            </h4>
+
+
+            <div class="categoria-producto">
+              ${producto.categoria || ""}
+            </div>
+
+
+            <div class="precios-overlay">
+
+
+              <div>
+
+                <span>
+                  Precio
+                </span>
+
+                <strong>
+                  ${formatearPrecio(producto.precio)}
+                </strong>
+
               </div>
 
-              ${producto.precio_combo ? `
-                <div class="precio-combo">
-                  <span>Combo</span>
-                  <strong>${formatearPrecio(producto.precio_combo)}</strong>
-                </div>
-              ` : ""}
+
+
+              ${
+              producto.precio_combo
+              ?
+              `
+              <div class="precio-combo">
+
+                <span>
+                  Combo
+                </span>
+
+                <strong>
+                  ${formatearPrecio(producto.precio_combo)}
+                </strong>
+
+              </div>
+              `
+              :
+              ""
+              }
+
 
             </div>
 
+
           </div>
+
+
 
           <button 
             type="button"
-            class="catalogo-cart btn-carrito-listado" 
+            class="btn-carrito-listado"
             data-id="${producto.id}"
           >
-            <i class="bi bi-cart"></i> Agregar al Carrito
+
+            <i class="bi bi-cart"></i>
+
           </button>
 
-        </a>
-      </div>
+
 
         </a>
+
       </div>
+
     `).join("");
 
     if (swiperProductos) {
@@ -1373,58 +1417,128 @@ function cambiarCantidadDetalle(valor) {
 }
 
 async function cargarProductosSimilares(categoriaId, productoActualId) {
+
   const contenedor = document.getElementById("productosSimilares");
 
   if (!contenedor) return;
 
-  const res = await fetch(`${API_URL}/productos`);
-  const productos = await res.json();
 
-  const similares = productos.filter(producto =>
-    producto.categoria_id == categoriaId && producto.id != productoActualId
-  );
+  try {
 
-  contenedor.innerHTML = similares.map(producto => `
-    <a href="producto.html?id=${producto.id}" class="catalogo-card">
+    const res = await fetch(`${API_URL}/productos`);
+    const productos = await res.json();
 
-      <div class="catalogo-img">
-        <img src="${API_URL}/${producto.imagen}" alt="${producto.nombre}">
-      </div>
 
-      <div class="catalogo-card-info">
+    const similares = productos.filter(producto =>
+      producto.categoria_id == categoriaId &&
+      producto.id != productoActualId
+    );
 
-        <h3>${producto.nombre}</h3>
 
-        <div class="precios">
+    contenedor.innerHTML = similares.map(producto => `
 
-          <div class="precio-normal">
-            <span>Precio</span>
-            <strong>${formatearPrecio(producto.precio)}</strong>
-          </div>
 
-          ${producto.precio_combo ? `
-          <div class="precio-combo">
-            <span>Combo</span>
-            <strong>${formatearPrecio(producto.precio_combo)}</strong>
-          </div>
-          ` : ""}
+      <a href="producto.html?id=${producto.id}" class="producto-card">
+
+
+        <div class="producto-card-imagen">
+
+          <img 
+            src="${API_URL}/${producto.imagen}" 
+            loading="lazy" decoding="async"
+            alt="${producto.nombre}"
+          >
 
         </div>
 
-      </div>
 
-      <div class="catalogo-btn-wrapper">
-        <button 
+
+        <div class="overlay-producto">
+
+
+          <h4>
+            ${producto.nombre}
+          </h4>
+
+
+
+          <div class="categoria-producto">
+            ${producto.categoria || ""}
+          </div>
+
+
+
+          <div class="precios-overlay">
+
+
+            <div>
+
+              <span>
+                Precio
+              </span>
+
+              <strong>
+                ${formatearPrecio(producto.precio)}
+              </strong>
+
+            </div>
+
+
+
+            ${
+            producto.precio_combo
+            ?
+            `
+            <div class="precio-combo">
+
+              <span>
+                Combo
+              </span>
+
+              <strong>
+                ${formatearPrecio(producto.precio_combo)}
+              </strong>
+
+            </div>
+            `
+            :
+            ""
+            }
+
+
+          </div>
+
+
+        </div>
+
+
+
+
+        <button
           type="button"
-          class="catalogo-cart btn-carrito-listado catalogo-menu"
+          class="btn-carrito-listado"
           data-id="${producto.id}"
         >
-          <i class="bi bi-cart"></i> Agregar al Carrito
-        </button>
-      </div>
 
-    </a>
-  `).join("");
+          <i class="bi bi-cart"></i>
+
+        </button>
+
+
+
+      </a>
+
+
+    `).join("");
+
+
+
+  } catch(error) {
+
+    console.error(error);
+
+  }
+
 }
 
 cargarDetalleProducto();
@@ -1508,56 +1622,132 @@ async function cargarCatalogo() {
 }
 
 function pintarCatalogo(productos) {
+
   const contenedor = document.getElementById("productosCatalogo");
   const contador = document.getElementById("contadorCatalogo");
 
+
   if (!contenedor) return;
+
 
   if (contador) {
     contador.textContent = `Mostrando ${productos.length} productos`;
   }
 
-  contenedor.innerHTML = productos.map(producto => `
-    <a href="producto.html?id=${producto.id}" class="catalogo-card">
 
-      <div class="catalogo-img">
-        <img src="${API_URL}/${producto.imagen}" alt="${producto.nombre}">
+
+  contenedor.innerHTML = productos.map(producto => `
+
+
+    <a href="producto.html?id=${producto.id}" class="producto-card">
+
+
+
+      <div class="producto-card-imagen">
+
+        <img 
+          src="${API_URL}/${producto.imagen}" 
+          loading="lazy" decoding="async"
+          alt="${producto.nombre}"
+        >
+
       </div>
 
-      <div class="catalogo-card-info menu-h3">
 
-        <h3>${producto.nombre}</h3>
 
-        <div class="precios">
 
-          <div class="precio-normal">
-            <span>Precio</span>
-            <strong>${formatearPrecio(producto.precio)}</strong>
-          </div>
 
-          ${producto.precio_combo ? `
-          <div class="precio-combo">
-            <span>Combo</span>
-            <strong>${formatearPrecio(producto.precio_combo)}</strong>
-          </div>
-          ` : ""}
+      <div class="overlay-producto">
+
+
+        <h4>
+          ${producto.nombre}
+        </h4>
+
+
+
+        <div class="categoria-producto">
+
+          ${producto.categoria || ""}
 
         </div>
 
+
+
+
+
+        <div class="precios-overlay">
+
+
+          <div>
+
+            <span>
+              Precio
+            </span>
+
+
+            <strong>
+              ${formatearPrecio(producto.precio)}
+            </strong>
+
+          </div>
+
+
+
+
+
+          ${
+          producto.precio_combo
+          ?
+          `
+          <div class="precio-combo">
+
+            <span>
+              Combo
+            </span>
+
+
+            <strong>
+              ${formatearPrecio(producto.precio_combo)}
+            </strong>
+
+
+          </div>
+          `
+          :
+          ""
+          }
+
+
+
+        </div>
+
+
       </div>
 
-      <div class="catalogo-btn-wrapper">
-        <button 
-          type="button"
-          class="catalogo-cart btn-carrito-listado menu"
-          data-id="${producto.id}"
-        >
-          <i class="bi bi-cart"></i> Agregar al Carrito
-        </button>
-      </div>
+
+
+
+
+
+      <button 
+        type="button"
+        class="btn-carrito-listado"
+        data-id="${producto.id}"
+      >
+
+        <i class="bi bi-cart"></i>
+
+      </button>
+
+
+
 
     </a>
+
+
   `).join("");
+
 }
 
 function filtrarCatalogoCategoria(categoriaId, boton) {
@@ -1975,39 +2165,101 @@ async function cargarNovedades() {
 }
 
 function pintarNovedades(productos) {
+
   const contenedor = document.getElementById("productosNovedades");
   const contador = document.getElementById("contadorNovedades");
 
   if (!contenedor) return;
 
+
   if (contador) {
     contador.textContent = `Mostrando ${productos.length} novedades`;
   }
 
+
   contenedor.innerHTML = productos.map(producto => `
-    <a href="producto.html?id=${producto.id}" class="catalogo-card">
 
-      <div class="catalogo-img">
-        <img src="${API_URL}/${producto.imagen}" alt="${producto.nombre}">
+    <a href="producto.html?id=${producto.id}" class="producto-card">
+
+
+      <div class="producto-card-imagen">
+
+        <img 
+          src="${API_URL}/${producto.imagen}" 
+          alt="${producto.nombre}"
+        >
+
       </div>
 
-      <div class="catalogo-card-info">
-        <h3>${producto.nombre}</h3>
-        <strong>${formatearPrecio(producto.precio)}</strong>
-        <div class="catalogo-stars">Nuevo</div>
+
+
+      <div class="overlay-producto">
+
+
+        <h4>
+          ${producto.nombre}
+        </h4>
+
+
+        <div class="categoria-producto">
+          ${producto.categoria || ""}
+        </div>
+
+
+
+        <div class="precios-overlay">
+
+
+          <div>
+            <span>Precio</span>
+            <strong>
+              ${formatearPrecio(producto.precio)}
+            </strong>
+          </div>
+
+
+
+          ${
+            producto.precio_combo
+            ?
+            `
+            <div class="precio-combo">
+              <span>Combo</span>
+              <strong>
+                ${formatearPrecio(producto.precio_combo)}
+              </strong>
+            </div>
+            `
+            :
+            ""
+          }
+
+
+        </div>
+
+
       </div>
 
-      <button 
+
+
+      <button
         type="button"
-        class="catalogo-cart btn-carrito-listado" 
+        class="btn-carrito-listado"
         data-id="${producto.id}"
       >
+
         <i class="bi bi-cart"></i>
+
       </button>
 
+
     </a>
+
+
   `).join("");
+
 }
+
 document.getElementById("ordenNovedades")?.addEventListener("change", e => {
   let productos = [...productosNovedadesData];
 
