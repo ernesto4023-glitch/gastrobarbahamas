@@ -306,7 +306,6 @@ td {
   height: 2px;
   border: none;
   margin: 0 30px;
-  margin-top: 10px;
 }
 
 .titulo .hr1 {
@@ -693,7 +692,6 @@ td {
 
 .categoria-producto {
   color: #919090;
-  font-style: italic;
   font-weight: 500;
 }
 
