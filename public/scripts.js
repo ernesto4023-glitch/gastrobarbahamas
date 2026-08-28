@@ -250,6 +250,7 @@ const cerrarModalCategoria = document.getElementById("cerrarModalCategoria");
 const modalCategoria = document.getElementById("modalCategoria");
 const formCategoria = document.getElementById("formCategoria");
 const nombreCategoria = document.getElementById("nombreCategoria");
+const ordenCategoria = document.getElementById("ordenCategoria");
 const imagenCategoria = document.getElementById("imagenCategoria");
 const contenedorCategorias = document.getElementById("contenedorCategorias");
 
@@ -265,21 +266,28 @@ if (
   modalCategoria &&
   formCategoria &&
   nombreCategoria &&
+  ordenCategoria &&
   imagenCategoria &&
   contenedorCategorias
 ) {
+
   abrirModalCategoria.addEventListener("click", () => {
+    categoriaEditandoId = null;
+    formCategoria.reset();
     modalCategoria.classList.add("activo");
   });
 
   cerrarModalCategoria.addEventListener("click", () => {
     modalCategoria.classList.remove("activo");
+    formCategoria.reset();
+    categoriaEditandoId = null;
   });
 
   formCategoria.addEventListener("submit", async e => {
     e.preventDefault();
 
     const nombre = nombreCategoria.value.trim();
+    const orden = ordenCategoria.value;
     const archivo = imagenCategoria.files[0];
 
     if (!nombre) {
@@ -287,19 +295,34 @@ if (
       return;
     }
 
-    if (!archivo) {
+    if (!orden || Number(orden) < 1) {
+      alert("Ingresa un orden válido");
+      return;
+    }
+
+    // Imagen obligatoria únicamente al crear
+    if (!categoriaEditandoId && !archivo) {
       alert("Selecciona una imagen");
       return;
     }
 
     const formData = new FormData();
+
     formData.append("nombre", nombre);
-    formData.append("imagen", archivo);
+    formData.append("orden", orden);
 
-    await guardarCategoria(formData);
+    // MUY IMPORTANTE
+    if (archivo) {
+      formData.append("imagen", archivo);
+    }
 
-    formCategoria.reset();
-    modalCategoria.classList.remove("activo");
+    const guardado = await guardarCategoria(formData);
+
+    if (guardado) {
+      formCategoria.reset();
+      modalCategoria.classList.remove("activo");
+      categoriaEditandoId = null;
+    }
   });
 
   cargarCategoriasAdmin();
@@ -308,26 +331,49 @@ if (
 
 async function guardarCategoria(formData) {
   try {
+
     const url = categoriaEditandoId
       ? `${API_URL}/categorias/${categoriaEditandoId}`
       : `${API_URL}/categorias`;
 
-    const method = categoriaEditandoId ? "PUT" : "POST";
+    const method = categoriaEditandoId
+      ? "PUT"
+      : "POST";
 
     const res = await fetch(url, {
       method,
-      body: formData,
+      body: formData
     });
 
+    const data = await res.json().catch(() => null);
+
     if (!res.ok) {
-      throw new Error("Error al guardar la categoría");
+      console.error("ERROR BACKEND CATEGORIA:", data);
+
+      alert(
+        data?.message ||
+        "Error al guardar la categoría"
+      );
+
+      return false;
     }
+
+    console.log("CATEGORIA GUARDADA:", data);
 
     await cargarCategoriasAdmin();
 
+    return true;
+
   } catch (error) {
-    console.error(error);
+
+    console.error(
+      "ERROR GUARDAR CATEGORIA:",
+      error
+    );
+
     alert("No se pudo guardar la categoría");
+
+    return false;
   }
 }
 async function cargarCategoriasAdmin() {
@@ -344,7 +390,6 @@ async function cargarCategoriasAdmin() {
             <th>Imagen</th>
             <th>Nombre</th>
             <th>Productos</th>
-            <th>Estado</th>
             <th>Fecha</th>
             <th>Acciones</th>
           </tr>
@@ -371,12 +416,6 @@ async function cargarCategoriasAdmin() {
               </td>
 
               <td>0</td>
-
-              <td>
-                <span class="estado-producto activo">
-                  Activa
-                </span>
-              </td>
 
               <td>${new Date().toLocaleDateString()}</td>
 
@@ -451,7 +490,12 @@ async function editarCategoria(id) {
   if (!categoria) return;
 
   categoriaEditandoId = id;
+
   nombreCategoria.value = categoria.nombre;
+  ordenCategoria.value = categoria.orden || "";
+
+  imagenCategoria.value = "";
+
   modalCategoria.classList.add("activo");
 }
 /* =========================
@@ -857,7 +901,6 @@ async function cargarProductosAdmin() {
             <th>Precio</th> <!-- Aquí mostramos el precio -->
             <th>Stock</th>
             <th>Vendidos</th>
-            <th>Estado</th>
             <th>Fecha</th>
             <th>Acciones</th>
           </tr>
@@ -897,7 +940,7 @@ async function cargarProductosAdmin() {
                     <i class="bi bi-pencil"></i>
                   </button>
 
-                  <a href="producto.html?id=${producto.id}">
+                  <a class="eye" href="producto.html?id=${producto.id}">
                     <i class="bi bi-eye"></i>
                   </a>
 
@@ -1189,10 +1232,9 @@ async function cargarProductosIndex() {
 
 
 
-              ${
-              producto.precio_combo
-              ?
-              `
+              ${producto.precio_combo
+        ?
+        `
               <div class="precio-combo">
 
                 <span>
@@ -1205,9 +1247,9 @@ async function cargarProductosIndex() {
 
               </div>
               `
-              :
-              ""
-              }
+        :
+        ""
+      }
 
 
             </div>
@@ -1485,10 +1527,9 @@ async function cargarProductosSimilares(categoriaId, productoActualId) {
 
 
 
-            ${
-            producto.precio_combo
-            ?
-            `
+            ${producto.precio_combo
+        ?
+        `
             <div class="precio-combo">
 
               <span>
@@ -1501,9 +1542,9 @@ async function cargarProductosSimilares(categoriaId, productoActualId) {
 
             </div>
             `
-            :
-            ""
-            }
+        :
+        ""
+      }
 
 
           </div>
@@ -1533,7 +1574,7 @@ async function cargarProductosSimilares(categoriaId, productoActualId) {
 
 
 
-  } catch(error) {
+  } catch (error) {
 
     console.error(error);
 
@@ -1696,10 +1737,9 @@ function pintarCatalogo(productos) {
 
 
 
-          ${
-          producto.precio_combo
-          ?
-          `
+          ${producto.precio_combo
+      ?
+      `
           <div class="precio-combo">
 
             <span>
@@ -1714,9 +1754,9 @@ function pintarCatalogo(productos) {
 
           </div>
           `
-          :
-          ""
-          }
+      :
+      ""
+    }
 
 
 
@@ -2219,10 +2259,9 @@ function pintarNovedades(productos) {
 
 
 
-          ${
-            producto.precio_combo
-            ?
-            `
+          ${producto.precio_combo
+      ?
+      `
             <div class="precio-combo">
               <span>Combo</span>
               <strong>
@@ -2230,9 +2269,9 @@ function pintarNovedades(productos) {
               </strong>
             </div>
             `
-            :
-            ""
-          }
+      :
+      ""
+    }
 
 
         </div>
@@ -3049,14 +3088,28 @@ cargarDashboardMetricas();
 cargarGraficasDashboard("dia");
 
 document.querySelectorAll('a[href^="#"]').forEach(a => {
+
   a.addEventListener('click', e => {
+
+    const href = a.getAttribute("href");
+
+    // Ignorar enlaces vacíos href="#"
+    if (!href || href === "#") {
+      return;
+    }
+
     e.preventDefault();
 
-    const target = document.querySelector(a.getAttribute("href"));
+    const target = document.querySelector(href);
+
     if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
+      target.scrollIntoView({
+        behavior: "smooth"
+      });
     }
+
   });
+
 });
 
 
@@ -3137,7 +3190,7 @@ let selectedTable = null;
 /* =========================
    ABRIR MODAL CLIENTE
 ========================= */
-function openReservation(){
+function openReservation() {
   document.getElementById("reservationModal").style.display = "flex";
   loadTables();
 }
@@ -3145,7 +3198,7 @@ function openReservation(){
 /* =========================
    CARGAR MESAS CLIENTE
 ========================= */
-async function loadTables(){
+async function loadTables() {
   const res = await fetch(`${API_URL}/mesas`);
   const data = await res.json();
 
@@ -3157,7 +3210,7 @@ async function loadTables(){
     const div = document.createElement("div");
     div.classList.add("table-item");
 
-    if(m.estado === "disponible"){
+    if (m.estado === "disponible") {
       div.classList.add("table-available");
     } else {
       div.classList.add("table-occupied");
@@ -3165,7 +3218,7 @@ async function loadTables(){
 
     div.textContent = m.numero_mesa;
 
-    if(m.estado === "disponible"){
+    if (m.estado === "disponible") {
       div.onclick = () => selectTable(div, m.id);
     }
 
@@ -3176,7 +3229,7 @@ async function loadTables(){
 /* =========================
    SELECCIONAR MESA
 ========================= */
-function selectTable(el, id){
+function selectTable(el, id) {
 
   document.querySelectorAll(".table-item")
     .forEach(e => e.classList.remove("table-selected"));
@@ -3188,20 +3241,20 @@ function selectTable(el, id){
 /* =========================
    CREAR RESERVA
 ========================= */
-async function createReservation(){
+async function createReservation() {
 
   const name = document.getElementById("inputName").value;
   const cedula = document.getElementById("inputId").value;
 
-  if(!name || !cedula || !selectedTable){
+  if (!name || !cedula || !selectedTable) {
     alert("Completa todos los campos y selecciona mesa");
     return;
   }
 
-  await fetch(`${API_URL}/reservas`,{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
+  await fetch(`${API_URL}/reservas`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
       nombre: name,
       cedula: cedula,
       mesa_id: selectedTable
@@ -3217,7 +3270,7 @@ async function createReservation(){
 /* =========================
    ADMIN - CARGAR TABLA
 ========================= */
-async function loadAdmin(){
+async function loadAdmin() {
   const res = await fetch(`${API_URL}/mesas`);
   const data = await res.json();
 
@@ -3248,12 +3301,12 @@ async function loadAdmin(){
 /* =========================
    ADMIN - TOGGLE ESTADO
 ========================= */
-async function toggleTable(id, estado){
+async function toggleTable(id, estado) {
 
-  await fetch(`${API_URL}/mesas/${id}`,{
-    method:"PUT",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
+  await fetch(`${API_URL}/mesas/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
       estado: estado === "ocupado" ? "disponible" : "ocupado"
     })
   });
@@ -3266,12 +3319,12 @@ async function toggleTable(id, estado){
 ========================= */
 loadAdmin();
 
-function closeReservation(){
+function closeReservation() {
   document.getElementById("reservationModal").style.display = "none";
   selectedTable = null;
 }
 
-async function toggleTable(id, checked){
+async function toggleTable(id, checked) {
 
   const estado = checked ? "ocupado" : "disponible";
 

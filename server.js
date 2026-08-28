@@ -187,66 +187,183 @@ const uploadCategoria = multer({
    CATEGORÍAS
 ========================= */
 
+// LISTAR
 app.get("/categorias", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM categorias ORDER BY id DESC");
+
+    const [rows] = await db.query(`
+      SELECT *
+      FROM categorias
+      ORDER BY orden ASC, id ASC
+    `);
+
     res.json(rows);
+
   } catch (error) {
-    res.status(500).json(error);
+
+    console.error("ERROR GET CATEGORIAS:", error);
+
+    res.status(500).json({
+      message: "Error al cargar categorías",
+      error: error.message
+    });
+
   }
 });
 
-app.post("/categorias", uploadCategoria.single("imagen"), async (req, res) => {
-  try {
-    const { nombre } = req.body;
 
-    if (!nombre || !req.file) {
-      return res.status(400).json({
-        message: "Nombre e imagen son obligatorios",
+// CREAR
+app.post(
+  "/categorias",
+  uploadCategoria.single("imagen"),
+  async (req, res) => {
+
+    try {
+
+      const { nombre, orden } = req.body;
+
+      if (!nombre || !orden || !req.file) {
+
+        return res.status(400).json({
+          message: "Nombre, orden e imagen son obligatorios",
+          recibido: req.body
+        });
+
+      }
+
+      const ordenNumero = Number(orden);
+
+      if (
+        !Number.isInteger(ordenNumero) ||
+        ordenNumero < 1
+      ) {
+
+        return res.status(400).json({
+          message: "El orden no es válido"
+        });
+
+      }
+
+      const imagen =
+        `uploads/categorias/${req.file.filename}`;
+
+      const [result] = await db.query(
+        `
+        INSERT INTO categorias
+        (nombre, imagen, orden)
+        VALUES (?, ?, ?)
+        `,
+        [
+          nombre,
+          imagen,
+          ordenNumero
+        ]
+      );
+
+      res.json({
+        id: result.insertId,
+        nombre,
+        imagen,
+        orden: ordenNumero
       });
+
+    } catch (error) {
+
+      console.error(
+        "ERROR CREAR CATEGORIA:",
+        error
+      );
+
+      res.status(500).json({
+        message: "Error al crear categoría",
+        error: error.message
+      });
+
     }
-
-    const imagen = `uploads/categorias/${req.file.filename}`;
-
-    const [result] = await db.query(
-      "INSERT INTO categorias(nombre, imagen) VALUES (?, ?)",
-      [nombre, imagen]
-    );
-
-    res.json({
-      id: result.insertId,
-      nombre,
-      imagen,
-    });
-  } catch (error) {
-    res.status(500).json(error);
   }
-});
+);
 
-app.put("/categorias/:id", uploadCategoria.single("imagen"), async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { nombre } = req.body;
 
-    let query = "UPDATE categorias SET nombre = ? WHERE id = ?";
-    let values = [nombre, id];
+// EDITAR
+app.put(
+  "/categorias/:id",
+  uploadCategoria.single("imagen"),
+  async (req, res) => {
 
-    if (req.file) {
-      const imagen = `uploads/categorias/${req.file.filename}`;
-      query = "UPDATE categorias SET nombre = ?, imagen = ? WHERE id = ?";
-      values = [nombre, imagen, id];
+    try {
+
+      const { id } = req.params;
+      const { nombre, orden } = req.body;
+
+      if (!nombre || !orden || !req.file) {
+        return res.status(400).json({
+          message: "Nombre, orden e imagen son obligatorios",
+        });
+      }
+
+      const ordenNumero = parseInt(orden, 10);
+
+      if (isNaN(ordenNumero) || ordenNumero < 1) {
+        return res.status(400).json({
+          message: "El orden no es válido"
+        });
+      }
+
+      if (req.file) {
+
+        const imagen =
+          `uploads/categorias/${req.file.filename}`;
+
+        await db.query(
+          `
+          UPDATE categorias
+          SET nombre = ?,
+              orden = ?,
+              imagen = ?
+          WHERE id = ?
+          `,
+          [
+            nombre,
+            ordenNumero,
+            imagen,
+            id
+          ]
+        );
+
+      } else {
+
+        await db.query(
+          `
+          UPDATE categorias
+          SET nombre = ?,
+              orden = ?
+          WHERE id = ?
+          `,
+          [
+            nombre,
+            ordenNumero,
+            id
+          ]
+        );
+
+      }
+
+      res.json({
+        message: "Categoría actualizada correctamente"
+      });
+
+    } catch (error) {
+
+      console.error("ERROR EDITAR CATEGORIA:", error);
+
+      res.status(500).json({
+        message: "Error al actualizar categoría",
+        error: error.message
+      });
+
     }
-
-    await db.query(query, values);
-
-    res.json({
-      message: "Categoría actualizada correctamente"
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
   }
-});
+);
 
 /*==========================
    ELIMINAR CATEGORIA
@@ -968,6 +1085,28 @@ app.put("/mesas/:id", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
+  }
+});
+
+app.get("/test-db", async (req, res) => {
+  try {
+    const [base] = await db.query(
+      "SELECT DATABASE() AS nombre"
+    );
+
+    const [columnas] = await db.query(
+      "SHOW COLUMNS FROM categorias"
+    );
+
+    res.json({
+      baseDatos: base[0].nombre,
+      columnas: columnas.map(c => c.Field)
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
 

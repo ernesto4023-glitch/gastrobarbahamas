@@ -211,9 +211,17 @@
           <h2>Crear Categoría</h2>
 
           <form id="formCategoria">
+
             <input type="text" id="nombreCategoria" placeholder="Nombre de la categoría" required>
-            <input type="file" id="imagenCategoria" accept="image/*" required>
-            <button type="submit">Guardar Categoría</button>
+
+            <input type="number" id="ordenCategoria" placeholder="Orden" min="1" required>
+
+            <input type="file" id="imagenCategoria" accept="image/*">
+
+            <button type="submit">
+              Guardar Categoría
+            </button>
+
           </form>
         </div>
       </div>
@@ -323,25 +331,25 @@
 
       <h2 class="page-title">Servicio de Mesas</h2>
 
-<div class="table-container">
+      <div class="table-container">
 
-  <table class="restaurant-table">
+        <table class="restaurant-table">
 
-    <thead>
-      <tr>
-        <th>Mesa</th>
-        <th>Nombre</th>
-        <th>Cédula</th>
-        <th>Estado</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
+          <thead>
+            <tr>
+              <th>Mesa</th>
+              <th>Nombre</th>
+              <th>Cédula</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
 
-    <tbody id="tabla" class="table-body"></tbody>
+          <tbody id="tabla" class="table-body"></tbody>
 
-  </table>
+        </table>
 
-</div>
+      </div>
 
       <section class="admin-section" id="pedidos">
         <h2 class="admin-h2">Pedidos</h2>
@@ -407,7 +415,7 @@
     });
   </script>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script src="scripts.js?v=2"></script>
 </body>
 
