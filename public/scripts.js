@@ -29,6 +29,7 @@ let productoEditandoId = null;
 let imagenActualProducto = "";
 let imagenesActualesProducto = "[]";
 let imagenesActualesPreview = [];
+let categoriaProductoFiltro = "";
 
 /* =========================
    ADMIN: FLYERS
@@ -788,6 +789,54 @@ async function cargarCategoriasSelectProducto() {
   }
 }
 
+async function cargarFiltroCategoriasProductos() {
+
+  const select = document.getElementById("filtroCategoriaProductos");
+
+  if (!select) return;
+
+  try {
+
+    const res = await fetch(`${API_URL}/categorias`);
+
+    const categorias = await res.json();
+
+    console.log("Categorias filtro:", categorias);
+
+
+    select.innerHTML = `
+            <option value="">
+                Todas las categorías
+            </option>
+
+            ${categorias.map(categoria => `
+                <option value="${categoria.id}">
+                    ${categoria.nombre}
+                </option>
+            `).join("")}
+        `;
+
+
+    select.addEventListener("change", () => {
+
+      categoriaProductoFiltro = select.value;
+
+      cargarFiltroCategoriasProductos();
+      cargarProductosAdmin();
+
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando filtro categorías:",
+      error
+    );
+
+  }
+
+}
 let tipoProducto = "normal";
 
 document.querySelectorAll("[data-tipo-producto]").forEach(btn => {
@@ -888,7 +937,12 @@ async function cargarProductosAdmin() {
   if (!contenedorProductos) return;
 
   try {
-    const res = await fetch(`${API_URL}/productos`);
+
+    const url = categoriaProductoFiltro
+      ? `${API_URL}/productos?categoria=${categoriaProductoFiltro}`
+      : `${API_URL}/productos`;
+
+    const res = await fetch(url);
     const productos = await res.json();
 
     contenedorProductos.innerHTML = `

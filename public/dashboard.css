@@ -113,6 +113,26 @@ ADMIN CSS REORGANIZADO
   border-radius: 10px;
 }
 
+.filtro-productos-admin {
+
+    margin: 20px 0;
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+}
+
+
+.filtro-productos-admin select {
+
+    background:#111;
+    color:#fff;
+    border:1px solid #D4AF37;
+    padding:10px 15px;
+    border-radius:8px;
+
+}
+
 /* =========================
    CARD PRINCIPAL
 ========================= */
