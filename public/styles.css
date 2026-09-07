@@ -2355,27 +2355,6 @@ input:checked+.slider:before {
 }
 
 
-/* Responsive */
-@media (max-width: 768px) {
-
-    .flyer-pc {
-        display: none !important;
-    }
-
-    .flyer-mobile {
-        display: block;
-        width: 100%;
-    }
-
-    .flyer-mobile img {
-        width: 100%;
-        height: auto;
-        display: block;
-        border-radius: 12px;
-    }
-
-}
-
 
 @media (max-width: 1200px) {
   .catalogo-grid {
@@ -2903,4 +2882,20 @@ input:checked+.slider:before {
   .dashboard-chart-card canvas {
     height: 280px !important;
   }
+
+      .flyer-pc {
+        display: none !important;
+    }
+
+    .flyer-mobile {
+        display: block;
+        width: 100%;
+    }
+
+    .flyer-mobile img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 12px;
+    }
 }
