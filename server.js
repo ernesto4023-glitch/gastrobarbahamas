@@ -14,7 +14,9 @@ app.use(express.json());
 
 // Carpetas
 const publicPath = path.join(__dirname, "public");
-const uploadsPath = process.env.UPLOAD_DIR || path.join(__dirname, "uploads");
+const uploadsPath = process.env.UPLOAD_DIR
+  ? path.resolve(__dirname, process.env.UPLOAD_DIR)
+  : path.join(__dirname, "uploads");
 
 const categoriasPath = path.join(uploadsPath, "categorias");
 const flyersPath = path.join(uploadsPath, "flyers");
