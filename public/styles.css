@@ -2334,6 +2334,47 @@ input:checked+.slider:before {
   font-size: 16px;
 }
 
+/* Flyer escritorio */
+.flyer-pc {
+    display: block;
+    width: 100%;
+}
+
+.flyer-pc img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 15px;
+}
+
+
+/* Flyer móvil oculto inicialmente */
+.flyer-mobile {
+    display: none;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .flyer-pc {
+        display: none;
+    }
+
+    .flyer-mobile {
+        display: block;
+        width: 100%;
+    }
+
+    .flyer-mobile img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 12px;
+    }
+
+}
+
 
 @media (max-width: 1200px) {
   .catalogo-grid {
