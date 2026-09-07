@@ -2351,7 +2351,7 @@ input:checked+.slider:before {
 
 /* Flyer móvil oculto inicialmente */
 .flyer-mobile {
-    display: none;
+    display: none !important;
 }
 
 
@@ -2359,7 +2359,7 @@ input:checked+.slider:before {
 @media (max-width: 768px) {
 
     .flyer-pc {
-        display: none;
+        display: none !important;
     }
 
     .flyer-mobile {
