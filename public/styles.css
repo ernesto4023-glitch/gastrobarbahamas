@@ -2351,7 +2351,7 @@ input:checked+.slider:before {
 
 /* Flyer móvil oculto inicialmente */
 .flyer-mobile {
-    display: none !important;
+    display: none;
 }
 
 
@@ -2884,7 +2884,7 @@ input:checked+.slider:before {
   }
 
       .flyer-pc {
-        display: none !important;
+        display: none;
     }
 
     .flyer-mobile {
