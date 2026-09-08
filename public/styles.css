@@ -2354,12 +2354,52 @@ input:checked+.slider:before {
     display: none;
 }
 
+/* =========================
+   IMAGEN QR MÉTODO DE PAGO
+========================= */
+
 .qr-metodo-pago {
     display: block;
     width: 220px;
-    max-width: 100%;
+    height: auto;
+    max-width: 90%;
     margin: 20px auto;
-    border-radius: 10px;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+
+/* Contenedor de información del pago */
+
+.info-pago {
+    text-align: center;
+    width: 100%;
+}
+
+
+/* Responsive móvil */
+
+@media (max-width: 768px) {
+
+    .qr-metodo-pago {
+        width: 180px;
+        max-width: 80%;
+        margin: 15px auto;
+    }
+
+}
+
+
+/* Pantallas pequeñas */
+
+@media (max-width: 480px) {
+
+    .qr-metodo-pago {
+        width: 150px;
+        max-width: 75%;
+        margin: 10px auto;
+    }
+
 }
 
 
