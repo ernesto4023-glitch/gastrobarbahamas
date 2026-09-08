@@ -56,44 +56,38 @@
   </main>
 
   <div class="modal-checkout" id="modalCheckout">
-    <div class="modal-checkout-content">
-      <span class="cerrar-checkout" id="cerrarCheckout">&times;</span>
+            <div class="modal-checkout-content">
+                <span class="cerrar-checkout" id="cerrarCheckout">&times;</span>
 
-      <h2>Finalizar compra</h2>
+                <h2>Finalizar compra</h2>
 
-      <form id="formCheckout">
-        <input type="text" id="checkoutNombre" placeholder="Nombre completo" required>
-        <input type="tel" id="checkoutWhatsapp" placeholder="WhatsApp" required>
-        <input type="email" id="checkoutCorreo" placeholder="Correo electrónico">
+                <form id="formCheckout">
+                    <input type="text" id="checkoutNombre" placeholder="Nombre completo" required>
+                    <input type="tel" id="checkoutWhatsapp" placeholder="WhatsApp" required>
+                    <input type="email" id="checkoutCorreo" placeholder="Correo electrónico">
 
-        <input type="text" id="checkoutDireccion" placeholder="Dirección" required>
-        <input type="text" id="checkoutCiudad" placeholder="Ciudad" required>
+                    <input type="text" id="checkoutDireccion" placeholder="Dirección" required>
+                    <input type="text" id="checkoutCiudad" placeholder="Ciudad" required>
 
-        <input type="hidden" id="checkoutMetodoPago" required>
+                    <input type="hidden" id="checkoutMetodoPago" required>
 
-        <div class="metodos-pago">
-          <button type="button" class="metodo-pago-btn" data-metodo-pago="Nequi">
-            Nequi
-          </button>
+                    <div class="metodos-pago" id="metodosPago">
+                    </div>
 
-          <button type="button" class="metodo-pago-btn" data-metodo-pago="Bancolombia">
-            Bancolombia
-          </button>
+                    <div class="info-metodo-pago" id="infoMetodoPago">
+                        Selecciona un método de pago para ver la información.
+                    </div>
 
+                    <input type="file" id="checkoutComprobante" accept="image/*,.pdf">
+
+                    <textarea id="checkoutNotas" placeholder="Notas adicionales"></textarea>
+
+                    <button type="submit">Enviar pedido</button>
+                </form>
+            </div>
         </div>
 
-        <div class="info-metodo-pago" id="infoMetodoPago">
-          Selecciona un método de pago para ver la información.
-        </div>
 
-        <input type="file" id="checkoutComprobante" accept="image/*,.pdf">
-
-        <textarea id="checkoutNotas" placeholder="Notas adicionales"></textarea>
-
-        <button type="submit">Enviar pedido</button>
-      </form>
-    </div>
-  </div>
   <button id="btnCarritoFlotante" class="carrito-flotante">
     <i class="bi bi-cart"></i> <span id="contadorCarrito">0</span>
   </button>

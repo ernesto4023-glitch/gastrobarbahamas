@@ -2408,6 +2408,7 @@ document.addEventListener("click", e => {
 
   if (btnCheckout && modalCheckout) {
     modalCheckout.classList.add("activo");
+    cargarMetodosPago();
   }
 });
 
@@ -2460,45 +2461,134 @@ async function eliminarPedido(id) {
 }
 
 /* =========================
-   MÉTODO DE PAGO
+   MÉTODOS DE PAGO DINÁMICOS
 ========================= */
 
-document.querySelectorAll(".metodo-pago-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const metodo = btn.dataset.metodoPago;
+async function cargarMetodosPago() {
 
-    document.querySelectorAll(".metodo-pago-btn").forEach(b => {
-      b.classList.remove("activo");
+  try {
+
+    const respuesta = await fetch(`${API_URL}/metodos-pago`);
+
+    const metodos = await respuesta.json();
+
+
+    const contenedor = document.getElementById("metodosPago");
+
+    if (!contenedor) return;
+
+
+    contenedor.innerHTML = "";
+
+
+    metodos.forEach(metodo => {
+
+      contenedor.innerHTML += `
+
+            <button 
+                class="metodo-pago-btn"
+                data-id="${metodo.id}"
+                data-metodo-pago="${metodo.nombre}">
+
+                ${metodo.nombre}
+
+            </button>
+
+            `;
+
     });
 
-    btn.classList.add("activo");
 
-    if (checkoutMetodoPago) {
-      checkoutMetodoPago.value = metodo;
-    }
 
-    if (infoMetodoPago) {
-      if (metodo === "Nequi") {
-        infoMetodoPago.innerHTML = `
-          <strong>Pago por Nequi</strong><br>
-          Número: 322 334 9682<br>
-          Titular: Christian Alejandro Rivera Ortiz<br>
-          Luego de pagar, sube el comprobante.
-        `;
-      }
+    document.querySelectorAll(".metodo-pago-btn")
+      .forEach(btn => {
 
-      if (metodo === "Bancolombia") {
-        infoMetodoPago.innerHTML = `
-          <strong>Pago por Bancolombia</strong><br>
-          Cuenta de ahorros: 59726688871<br>
-          Titular: Christian Alejandro Rivera Ortiz<br>
-          Luego de pagar, sube el comprobante.
-        `;
-      }
-    }
-  });
-});
 
+        btn.addEventListener("click", () => {
+
+
+          const id = btn.dataset.id;
+
+
+          document.querySelectorAll(".metodo-pago-btn")
+            .forEach(b => {
+
+              b.classList.remove("activo");
+
+            });
+
+
+          btn.classList.add("activo");
+
+
+
+          const metodoSeleccionado =
+            metodos.find(m => m.id == id);
+
+
+
+          if (checkoutMetodoPago) {
+
+            checkoutMetodoPago.value =
+              metodoSeleccionado.nombre;
+
+          }
+
+
+
+          if (infoMetodoPago) {
+
+            infoMetodoPago.innerHTML = `
+
+                    <div class="info-pago">
+
+                        <strong>
+                        Pago por ${metodoSeleccionado.nombre}
+                        </strong>
+
+
+                        <br><br>
+
+
+                        <img 
+                        src="${API_URL}/${metodoSeleccionado.imagen}"
+                        alt="${metodoSeleccionado.nombre}"
+                        class="qr-metodo-pago">
+
+
+                        <p>
+                        <b>Titular:</b><br>
+                        ${metodoSeleccionado.titular}
+                        </p>
+
+
+                        <p>
+                        ${metodoSeleccionado.consejo}
+                        </p>
+
+
+                    </div>
+
+                    `;
+
+          }
+
+        });
+
+
+      });
+
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando métodos de pago:",
+      error
+    );
+
+  }
+
+}
 /* =========================
    ENVIAR PEDIDO
 ========================= */
@@ -2871,48 +2961,6 @@ document.addEventListener("click", e => {
   }
 });
 
-/*METODO DE PAGO */
-
-document.querySelectorAll("[data-metodo-pago]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const metodo = btn.dataset.metodoPago;
-    const inputMetodo = document.getElementById("checkoutMetodoPago");
-    const info = document.getElementById("infoMetodoPago");
-
-    document.querySelectorAll("[data-metodo-pago]").forEach(b => {
-      b.classList.remove("activo");
-    });
-
-    btn.classList.add("activo");
-    inputMetodo.value = metodo;
-
-    if (metodo === "Nequi") {
-      info.innerHTML = `
-        <strong>Pago por Nequi</strong><br>
-        Número: 322 334 9682<br>
-        Titular: Christian Alejandro Rivera Ortiz<br>
-        Después de pagar, sube el comprobante.
-      `;
-    }
-
-    if (metodo === "Bancolombia") {
-      info.innerHTML = `
-        <strong>Pago por Bancolombia</strong><br>
-        Cuenta de ahorros: 59726688871<br>
-        Titular: Christian Alejandro Rivera Ortiz<br>
-        Después de pagar, sube el comprobante.
-      `;
-    }
-
-    if (metodo === "Contra entrega") {
-      info.innerHTML = `
-        <strong>Pago contra entrega</strong><br>
-        Pagas al recibir tu pedido.<br>
-        No necesitas subir comprobante.
-      `;
-    }
-  });
-});
 
 function sincronizarImagenesDesdePreview() {
   imagenesActualesPreview = imagenesPreviewProducto
@@ -3438,3 +3486,267 @@ function filtrarProductosPorCategoria(categoriaId) {
 document.addEventListener("DOMContentLoaded", () => {
   cargarCategoriasMovil();
 });
+
+/* =========================
+ ADMIN MÉTODOS DE PAGO
+========================= */
+
+
+const abrirModalPago =
+  document.getElementById("abrirModalPago");
+
+
+const modalPago =
+  document.getElementById("modalPago");
+
+
+const cerrarModalPago =
+  document.getElementById("cerrarModalPago");
+
+
+const formPago =
+  document.getElementById("formPago");
+
+
+
+if (abrirModalPago) {
+
+  abrirModalPago.onclick = () => {
+
+    modalPago.classList.add("activo");
+
+  }
+
+}
+
+
+
+if (cerrarModalPago) {
+
+  cerrarModalPago.onclick = () => {
+
+    modalPago.classList.remove("activo");
+
+  }
+
+}
+
+
+
+formPago?.addEventListener(
+  "submit",
+  async e => {
+
+
+    e.preventDefault();
+
+
+    const datos = new FormData();
+
+
+    datos.append(
+      "nombre",
+      document.getElementById("nombrePago").value
+    );
+
+
+    datos.append(
+      "titular",
+      document.getElementById("titularPago").value
+    );
+
+
+    datos.append(
+      "consejo",
+      document.getElementById("consejoPago").value
+    );
+
+
+
+    const imagen =
+      document.getElementById("imagenPago").files[0];
+
+
+    if (imagen) {
+
+      datos.append(
+        "imagen",
+        imagen
+      );
+
+    }
+
+
+
+    const res = await fetch(
+      `${API_URL}/metodos-pago`,
+      {
+        method: "POST",
+        body: datos
+      }
+    );
+
+
+
+    if (res.ok) {
+
+      alert(
+        "Método creado correctamente"
+      );
+
+
+      formPago.reset();
+
+      modalPago.classList.remove("activo");
+
+
+      cargarMetodosPagoAdmin();
+
+    }
+
+
+  });
+
+
+
+
+async function cargarMetodosPagoAdmin() {
+
+
+  const contenedor =
+    document.getElementById("contenedorMetodosPago");
+
+
+  if (!contenedor) return;
+
+
+
+  const res =
+    await fetch(
+      `${API_URL}/metodos-pago`
+    );
+
+
+
+  const metodos =
+    await res.json();
+
+
+
+  contenedor.innerHTML = `
+
+
+<table class="admin-products-table">
+
+
+<thead>
+
+<tr>
+
+<th>Imagen</th>
+
+<th>Método</th>
+
+<th>Titular</th>
+
+<th>Acciones</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+${metodos.map(m => `
+
+
+<tr>
+
+
+<td>
+
+<img 
+src="${API_URL}/${m.imagen}"
+style="width:90px">
+
+</td>
+
+
+
+<td>
+
+${m.nombre}
+
+</td>
+
+
+<td>
+
+${m.titular}
+
+</td>
+
+
+
+<td>
+
+<button
+class="delete"
+onclick="eliminarMetodoPago(${m.id})">
+
+<i class="bi bi-trash"></i>
+
+</button>
+
+
+</td>
+
+
+</tr>
+
+
+`).join("")}
+
+
+</tbody>
+
+
+</table>
+
+
+`;
+
+}
+
+
+
+async function eliminarMetodoPago(id) {
+
+
+  if (!confirm(
+    "¿Eliminar método de pago?"
+  ))
+    return;
+
+
+
+  await fetch(
+    `${API_URL}/metodos-pago/${id}`,
+    {
+      method: "DELETE"
+    }
+  );
+
+
+
+  cargarMetodosPagoAdmin();
+
+
+}
+
+
+
+cargarMetodosPagoAdmin();

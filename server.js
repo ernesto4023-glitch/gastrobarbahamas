@@ -22,13 +22,15 @@ const categoriasPath = path.join(uploadsPath, "categorias");
 const flyersPath = path.join(uploadsPath, "flyers");
 const productosPath = path.join(uploadsPath, "productos");
 const comprobantesPath = path.join(uploadsPath, "comprobantes");
+const pagosPath = path.join(uploadsPath, "pagos");
 
 [
   uploadsPath,
   categoriasPath,
   flyersPath,
   productosPath,
-  comprobantesPath
+  comprobantesPath,
+  pagosPath
 ].forEach(dir => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -678,6 +680,33 @@ app.post("/productos/vender", async (req, res) => {
 });
 
 /* =========================
+   MÉTODOS DE PAGO
+========================= */
+
+
+const storagePagos = multer.diskStorage({
+
+  destination: (req, file, cb) => {
+    cb(null, pagosPath);
+  },
+
+  filename: (req, file, cb) => {
+
+    const nombreArchivo =
+      Date.now() + "-" + file.originalname.replace(/\s+/g, "-");
+
+    cb(null, nombreArchivo);
+
+  }
+
+});
+
+
+const uploadPago = multer({
+  storage: storagePagos
+});
+
+/* =========================
    PEDIDOS
 ========================= */
 
@@ -1111,6 +1140,205 @@ app.get("/test-db", async (req, res) => {
     });
   }
 });
+
+
+app.get("/metodos-pago", async (req, res) => {
+
+  try {
+
+    const [rows] = await db.query(
+      `
+SELECT *
+FROM metodos_pago
+WHERE estado = 1
+ORDER BY id DESC
+`
+    );
+
+
+    res.json(rows);
+
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      message: "Error cargando métodos de pago"
+    });
+
+  }
+
+
+});
+
+app.post(
+  "/metodos-pago",
+  uploadPago.single("imagen"),
+  async (req, res) => {
+
+    try {
+
+
+      const {
+        nombre,
+        titular,
+        consejo
+      } = req.body;
+
+
+
+      if (!nombre || !titular || !req.file) {
+
+        return res.status(400).json({
+          message: "Nombre, titular y QR son obligatorios"
+        });
+
+      }
+
+
+
+      const imagen =
+        `uploads/pagos/${req.file.filename}`;
+
+
+
+      const [result] = await db.query(
+        `
+INSERT INTO metodos_pago
+(nombre,imagen,titular,consejo)
+VALUES(?,?,?,?)
+`,
+        [
+          nombre,
+          imagen,
+          titular,
+          consejo || ""
+        ]
+      );
+
+
+
+      res.json({
+
+        id: result.insertId,
+        message: "Método creado correctamente"
+
+      });
+
+
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json(error);
+
+    }
+
+
+  });
+
+app.delete("/metodos-pago/:id", async (req, res) => {
+
+  try {
+
+    await db.query(
+      "DELETE FROM metodos_pago WHERE id=?",
+      [req.params.id]
+    );
+
+
+    res.json({
+      message: "Método eliminado"
+    });
+
+
+  } catch (error) {
+
+    res.status(500).json(error);
+
+  }
+
+
+});
+
+app.put(
+  "/metodos-pago/:id",
+  uploadPago.single("imagen"),
+  async (req, res) => {
+
+    try {
+
+      const id = req.params.id;
+
+      const {
+        nombre,
+        titular,
+        consejo
+      } = req.body;
+
+
+      if (req.file) {
+
+        const imagen =
+          `uploads/pagos/${req.file.filename}`;
+
+
+        await db.query(
+          `
+UPDATE metodos_pago
+SET nombre=?,
+titular=?,
+consejo=?,
+imagen=?
+WHERE id=?
+`,
+          [
+            nombre,
+            titular,
+            consejo,
+            imagen,
+            id
+          ]
+        );
+
+
+      } else {
+
+
+        await db.query(
+          `
+UPDATE metodos_pago
+SET nombre=?,
+titular=?,
+consejo=?
+WHERE id=?
+`,
+          [
+            nombre,
+            titular,
+            consejo,
+            id
+          ]
+        );
+
+
+      }
+
+
+      res.json({
+        message: "Actualizado correctamente"
+      });
+
+
+    } catch (error) {
+
+      res.status(500).json(error);
+
+    }
+
+  });
 
 // =========================
 // SERVER

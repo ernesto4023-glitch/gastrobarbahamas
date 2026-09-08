@@ -368,27 +368,91 @@
         </table>
 
       </div>
+    </section>
 
-      <section class="admin-section" id="pedidos">
-        <h2 class="admin-h2">Pedidos</h2>
+    <section class="admin-section" id="pedidos">
+      <h2 class="admin-h2">Pedidos</h2>
 
-        <div class="admin-panel-card">
-          <div id="contenedorPedidos" class="productos-admin"></div>
+      <div class="admin-panel-card">
+        <div id="contenedorPedidos" class="productos-admin"></div>
+      </div>
+    </section>
+
+    <section class="admin-section" id="clientes">
+      <h2 class="admin-h2">Clientes</h2>
+      <p>Próximamente conectamos clientes.</p>
+    </section>
+
+    <section class="admin-section" id="resenas">
+      <h2 class="admin-h2">Reseñas</h2>
+      <p>Próximamente conectamos reseñas.</p>
+    </section>
+
+    <section class="admin-section" id="configuracion">
+
+      <h2 class="admin-h2">
+        Métodos de pago
+      </h2>
+
+
+      <button id="abrirModalPago" class="btn-crear-categoria">
+        + Agregar método de pago
+      </button>
+
+
+      <div class="modal-categoria" id="modalPago">
+
+        <div class="modal-contenido">
+
+          <span class="cerrar-modal" id="cerrarModalPago">
+            &times;
+          </span>
+
+
+          <h2>
+            Agregar método de pago
+          </h2>
+
+
+          <form id="formPago">
+
+
+            <input type="text" id="nombrePago" placeholder="Ej: Nequi, Bancolombia" required>
+
+
+            <input type="text" id="titularPago" placeholder="Titular de la cuenta" required>
+
+
+            <textarea id="consejoPago" placeholder="Mensaje para el cliente"></textarea>
+
+
+            <label>
+              Imagen QR
+            </label>
+
+
+            <input type="file" id="imagenPago" accept="image/*">
+
+
+            <button type="submit">
+              Guardar método
+            </button>
+
+
+          </form>
+
+
         </div>
-      </section>
 
-      <section class="admin-section" id="clientes">
-        <h2 class="admin-h2">Clientes</h2>
-        <p>Próximamente conectamos clientes.</p>
-      </section>
+      </div>
 
-      <section class="admin-section" id="resenas">
-        <h2 class="admin-h2">Reseñas</h2>
-        <p>Próximamente conectamos reseñas.</p>
-      </section>
 
-      <section class="admin-section" id="configuracion">
-      </section>
+
+      <div id="contenedorMetodosPago" class="productos-admin">
+      </div>
+
+
+    </section>
 
   </main>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

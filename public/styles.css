@@ -2354,6 +2354,13 @@ input:checked+.slider:before {
     display: none;
 }
 
+.qr-metodo-pago {
+    display: block;
+    width: 220px;
+    max-width: 100%;
+    margin: 20px auto;
+    border-radius: 10px;
+}
 
 
 @media (max-width: 1200px) {
